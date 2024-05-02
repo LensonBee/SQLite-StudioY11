@@ -1,3 +1,5 @@
+# SQLite cars database thing
+
 import sqlite3
 
 DATABASE = 'cars.db'
