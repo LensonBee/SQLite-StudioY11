@@ -10,7 +10,28 @@ DATABASE = 'videogames.db'
 def print_all_games():
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
-    sql = "SELECT name, genre, metacritic_rating, studio_name FROM game INNER JOIN studio ON game.studio_id=studio.studio_id;"
+    sort = input("""
+        What do you want to sort by?
+        1. Alphabetical order
+        2. Genre
+        3. Studio
+        4. Metacritic score
+        """)
+    while True:
+        if sort == "1":
+            sql = "SELECT name, genre, metacritic_rating, studio_name FROM game INNER JOIN studio ON game.studio_id=studio.studio_id ORDER BY name;"
+            break
+        elif sort == "2":
+            sql = "SELECT name, genre, metacritic_rating, studio_name FROM game INNER JOIN studio ON game.studio_id=studio.studio_id ORDER BY genre;"
+            break
+        elif sort == "3":
+            sql = "SELECT name, genre, metacritic_rating, studio_name FROM game INNER JOIN studio ON game.studio_id=studio.studio_id ORDER by studio_name;"
+            break
+        elif sort == "4":
+            sql = "SELECT name, genre, metacritic_rating, studio_name FROM game INNER JOIN studio ON game.studio_id=studio.studio_id ORDER by metacritic_rating;"
+            break
+        else:
+            print("That was not an option")
     cursor.execute(sql)
     results = cursor.fetchall()
     # loop through all results
@@ -233,20 +254,22 @@ while True:
         """)
     if account == "1":
         password = input("Password: ")
-        if password == "Password":
+        if password == "schizophrenia":  # password
             account = "editor"
+            print("Access granted")
             break
         else:
             print("Access denied")
     elif account == "2":
         account = "viewer"
+        print("Viewer access granted")
         break
     elif account == "3":
         break
     else:
         print("\nThat was not an option")
 
-while account == "editor": # Admin/editor
+while account == "editor":  # Admin/editor
     user_input = input(
         """
         What would you like to do.
@@ -272,7 +295,7 @@ while account == "editor": # Admin/editor
     else:
         print("\nThat was not an option")
 
-while account == "viewer": # Viewer/guest
+while account == "viewer":  # Viewer/guest
     user_input = input(
         """
         What would you like to do.
