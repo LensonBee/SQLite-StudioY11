@@ -58,26 +58,26 @@ def print_all_games():
 def print_all_studios():
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
-    sql = "SELECT * FROM studio ORDER BY studio_name;"
+    sql = "SELECT * FROM studio ORDER BY studio_id;"
     cursor.execute(sql)
     results = cursor.fetchall()
     # loop through all results
     print(color.cyan + "\nID                  Name")
     for studio in results:
         print(f"{studio[0]:<20}{studio[1]}")
-        print(color.end)
+    print(color.end)
     # loop finished here
     db.close()
 
 
 def search():
     # ask user for which table
-    user_input = input(color.yellow + """
+    user_input = input("""
         What do you want to search by?
         1. Game name
         2. Studio name
         3. Exit
-        """ + color.end)
+        """)
     if user_input == "1":
         search_game()
     elif user_input == "2":
@@ -96,16 +96,15 @@ def search_game():
     sql = "SELECT name, genre, metacritic_rating, studio_name FROM game INNER JOIN studio ON game.studio_id=studio.studio_id WHERE name LIKE ?;"
     cursor.execute(sql, (search,))
     results = cursor.fetchall()
-    print("\nInvalid query")
     # check if there are no results
-    if results == "":
+    if results == "[]":
         print(color.red + "No results found" + color.end)
     # loop through all results
     print(color.cyan + "\nName                                    Genre", end='')
     print("               Rating              Studio")
     for game in results:
         print(f"{game[0]:<40}{game[1]:<20}{game[2]:<20}{game[3]}")
-        print(color.end)
+    print(color.end)
     # loop finished here
     db.close()
 
@@ -119,26 +118,26 @@ def search_studio():
     cursor.execute(sql, (search,))
     results = cursor.fetchall()
     # check if there are no results
-    if results == "":
+    if results == "[]":
         print(color.red + "No results found" + color.end)
     # loop through all results
     print(color.cyan + "\nName                                    Genre", end='')
     print("               Rating              Studio")
     for game in results:
         print(f"{game[0]:<40}{game[1]:<20}{game[2]:<20}{game[3]}")
-        print(color.end)
+    print(color.end)
     # loop finished here
     db.close()
 
 
 def add_element():
     # ask user for which table
-    user_input = input(color.yellow + """
+    user_input = input("""
         Choose a table to add to.
         1. Games
         2. Studios
         3. Exit
-        """ + color.end)
+        """)
     if user_input == "1":
         add_game()
     elif user_input == "2":
@@ -151,15 +150,15 @@ def add_element():
 
 def add_game():
     # ask user details of new game
-    name = input(color.yellow + "Enter the name: ")
+    name = input("Enter the name: ")
     genre = input("Enter the genre: ")
     while True:
-        rating = int(input(color.yellow + "Enter the metacritic rating: " + color.end))
+        rating = int(input("Enter the metacritic rating: "))
         if rating > 100 or rating < 1:
-            print(color.red + "Enter a number between 1 and 100" + color.end)
+            print(color.red + "Enter a number between 1 and 100")
         else:
             break
-    studio_name = input(color.yellow + "Enter the studio: " + color.end)
+    studio_name = input("Enter the studio: ")
     studio_name = '%' + studio_name + '%'
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
@@ -171,7 +170,7 @@ def add_game():
         studio_id = result[0]
     else:
         # if studio does not exist
-        add_studio = input(color.green + "Studio not found, do you want to add it? (yes / no)\n" + color.end)
+        add_studio = input(color.yellow + "Studio not found, do you want to add it? (yes / no)\n" + color.end)
         if add_studio.lower() == "yes":
             # insert new studio
             studio_name = studio_name.replace("%", "")
@@ -197,7 +196,7 @@ def add_game():
 
 def add_studio():
     # ask user for new studio name
-    new_name = input(color.yellow + "\nEnter new studio below" + color.end)
+    new_name = input("\nEnter new studio below")
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
     # insert new studio
@@ -210,12 +209,12 @@ def add_studio():
 
 def delete_element():
     # ask user for which table
-    user_input = input(color.yellow + """
+    user_input = input("""
         Choose a table to delete something from.
         1. Games
         2. Studios
         3. Exit
-        """ + color.end)
+        """)
     if user_input == "1":
         delete_game()
     elif user_input == "2":
@@ -228,7 +227,7 @@ def delete_element():
 
 def delete_game():
     # ask user for game name to remove
-    delete_name = input(color.yellow + "\nEnter game to delete below" + color.end)
+    delete_name = input("\nEnter game to delete below")
     if delete_name != "":  # check if delete query is blank
         delete_name = '%' + delete_name + '%'
         db = sqlite3.connect(DATABASE)
@@ -238,7 +237,7 @@ def delete_game():
         if confirmation == "yes":
             pass
         else:
-            print(color.green + "Function stopped" + color.end)
+            print(color.yellow + "Function stopped" + color.end)
             return
         # delete game
         sql = "DELETE FROM game WHERE name LIKE ?;"
@@ -252,17 +251,17 @@ def delete_game():
 
 def delete_studio():
     # ask user for studio name to remove
-    delete_name = input(color.yellow + "\nEnter studio to delete below" + color.end)
+    delete_name = input("\nEnter studio to delete below")
     if delete_name != "":  # check if delete query is blank
         delete_name = '%' + delete_name + '%'
         db = sqlite3.connect(DATABASE)
         cursor = db.cursor()
-        # ask user if they're sure
+                # ask user if they're sure
         confirmation = input(color.red + "Are you sure you want to permanently delete this? (yes / no)" + color.end)
         if confirmation == "yes":
             pass
         else:
-            print(color.green + "Function stopped" + color.end)
+            print(color.yellow + "Function stopped" + color.end)
             return
         # delete studio
         sql = "DELETE FROM studio WHERE studio_name LIKE ?;"
@@ -273,18 +272,17 @@ def delete_studio():
     else:
         print(color.red + "Studio not found" + color.end)
 
-
 # main code
 while True:
     account = input(
-        color.yellow + """
+        """
         What account are you using?
         1. Editor
         2. Viewer
         3. Exit
         """)
     if account == "1":
-        password = getpass("Password: " + color.end)
+        password = getpass("Password: ")
         if password == "1234":  # password
             account = "editor"
             print(color.green + "Access granted" + color.end)
@@ -302,7 +300,7 @@ while True:
 
 while account == "editor":  # Admin/editor
     user_input = input(
-        color.yellow + """
+        """
         What would you like to do.
         1. Print all games
         2. Print all studios
@@ -310,7 +308,7 @@ while account == "editor":  # Admin/editor
         4. Add element
         5. Delete element
         8. Exit
-        """ + color.end)
+        """)
     if user_input == "1":
         print_all_games()
     elif user_input == "2":
@@ -328,20 +326,20 @@ while account == "editor":  # Admin/editor
 
 while account == "viewer":  # Viewer/guest
     user_input = input(
-        color.yellow + """
+        """
         What would you like to do.
         1. Print all games
         2. Print all studios
         3. Search
-        9. Exit
-        """ + color.end)
+        8. Exit
+        """)
     if user_input == "1":
         print_all_games()
     elif user_input == "2":
         print_all_studios()
     elif user_input == "3":
         search()
-    elif user_input == "9":
+    elif user_input == "8":
         break
     else:
         print(color.red + "\nThat was not an option" + color.end)
