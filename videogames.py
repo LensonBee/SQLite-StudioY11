@@ -196,7 +196,7 @@ def add_game():
 
 def add_studio():
     # ask user for new studio name
-    new_name = input("\nEnter new studio below")
+    new_name = input("\nEnter new studio below: \n")
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
     # insert new studio
@@ -227,13 +227,13 @@ def delete_element():
 
 def delete_game():
     # ask user for game name to remove
-    delete_name = input("\nEnter game to delete below")
+    delete_name = input("\nEnter game to delete below: \n")
     if delete_name != "":  # check if delete query is blank
         delete_name = '%' + delete_name + '%'
         db = sqlite3.connect(DATABASE)
         cursor = db.cursor()
         # ask user if they're sure
-        confirmation = input(color.red + "Are you sure you want to permanently delete this? (yes / no)" + color.end)
+        confirmation = input(color.red + "Are you sure you want to permanently delete this? (yes / no) " + color.end)
         if confirmation == "yes":
             pass
         else:
@@ -251,13 +251,13 @@ def delete_game():
 
 def delete_studio():
     # ask user for studio name to remove
-    delete_name = input("\nEnter studio to delete below")
+    delete_name = input("\nEnter studio to delete below: \n")
     if delete_name != "":  # check if delete query is blank
         delete_name = '%' + delete_name + '%'
         db = sqlite3.connect(DATABASE)
         cursor = db.cursor()
-                # ask user if they're sure
-        confirmation = input(color.red + "Are you sure you want to permanently delete this? (yes / no)" + color.end)
+        # ask user if they're sure
+        confirmation = input(color.red + "Are you sure you want to permanently delete this? (yes / no) " + color.end)
         if confirmation == "yes":
             pass
         else:
@@ -271,6 +271,7 @@ def delete_studio():
         db.close()
     else:
         print(color.red + "Studio not found" + color.end)
+
 
 # main code
 while True:
